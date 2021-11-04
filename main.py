@@ -1,66 +1,51 @@
-class Solution:
-    def __init__(self, give_ip: str = None):
-        ip_subnet = give_ip.split('/')
-        if len(ip_subnet) < 2:
-            raise ValueError
-        ip = ip_subnet[0]
-        subnet = ip_subnet[1]
+class IpClassifier:
+    def __init__(self, address):
+        ip = address.split('.')
+        self.ip = ip
 
-        ip_dotted = ip.split('.')
-
-        if len(ip_dotted) != 4:
-            raise ValueError
-
-        if int(subnet) > 32:
-            raise ValueError
-
-        self.ip_dotted = ip_dotted
-        self.class_: str = ''
-        self.designation: str = ''
-
-    def kill_it(self):
-        if self.ip_dotted[0] == '10':
-            self.class_ = 'A'
+    def get_class(self):
+        if self.ip[0] == '10':
+            self.ip_class = 'A'
             self.designation = 'Private'
 
-        elif self.ip_dotted[0] == '172' and 16 <= int(self.ip_dotted[1]) <= 31:
-            self.class_ = 'B'
+        elif self.ip[0] == '172' and 16 <= int(self.ip[1]) <= 31:
+            self.ip_class = 'B'
             self.designation = 'Private'
 
-        elif self.ip_dotted[0] == '192' and self.ip_dotted[1] == '168':
-            self.class_ = 'C'
+        elif self.ip[0] == '192' and self.ip[1] == '168':
+            self.ip_class = 'C'
             self.designation = 'Private'
 
-        elif self.ip_dotted[0] == '192' or 173 <= int(self.ip_dotted[0]) < 224:
-            self.class_ = 'C'
+        elif self.ip[0] == '192' or 173 <= int(self.ip[0]) < 224:
+            self.ip_class = 'C'
             self.designation = 'Public'
 
-        elif self.ip_dotted[0] == '172' or 128 <= int(self.ip_dotted[0]) <= 171:
-            self.class_ = 'B'
+        elif self.ip[0] == '172' or 128 <= int(self.ip[0]) <= 171:
+            self.ip_class = 'B'
             self.designation = 'Public'
 
-        elif self.ip_dotted[0] == '127':
-            self.class_ = 'A'
+        elif self.ip[0] == '127':
+            self.ip_class = 'A'
             self.designation = 'Special'
 
-        elif 1 < int(self.ip_dotted[0]) <= 126:
-            self.class_ = 'A'
+        elif 1 < int(self.ip[0]) <= 126:
+            self.ip_class = 'A'
             self.designation = 'Public'
 
-        elif 224 <= int(self.ip_dotted[0]) <= 255:
-            self.class_ = 'D or E'
+        elif 224 <= int(self.ip[0]) <= 255:
+            self.ip_class = 'D or E'
             self.designation = 'Special'
 
         else:
             raise ValueError
 
-        return f'class: {self.class_}, designation: {self.designation}'
+        return f'ip_address class type: {self.ip_class},ip_address designation: {self.designation}'
 
 
 if __name__ == '__main__':
-    i = input('Please enter an ip address: x.x.x.x/x\n')
     try:
-        solution = Solution(i)
-        print(solution.kill_it())
+        input1 = input('Please enter an ip address: x.x.x.x\n')
+        ip_classifier = IpClassifier(input1)
+        print(ip_classifier.get_class())
     except ValueError:
-        print('Please enter a valid address in this format: x.x.x.x/x')
+        print("please enter a valid ip address")
